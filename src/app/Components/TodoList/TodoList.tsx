@@ -88,6 +88,7 @@ const TodoList: React.FC<TodoListProps> = ({ todo }) => {
             day: "numeric",
           })}
         </span>
+
         <span className="float-right font-semibold text-xl">
           <button className=" text-red-600" onClick={() => setIsEditing(true)}>
             <FaEdit />

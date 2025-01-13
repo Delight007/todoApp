@@ -29,8 +29,12 @@ export default function Todo() {
         const data = doc.data() as Omit<Todos, "id">;
         return {
           id: doc.id,
-          ...data,
-          // createdAt: new Date(data.createdAt),
+          title: data.title,
+          done: data.done,
+          createdAt:
+            data.createdAt instanceof Timestamp
+              ? data.createdAt.toDate()
+              : data.createdAt, // Handle Firestore Timestamp
         };
       });
       console.log(todoList);
@@ -118,7 +122,7 @@ export default function Todo() {
               value={date}
               placeholder="Enter Date"
               onChange={(e) => setDate(e.target.value)}
-              className="border-red-600 border p-2 rounded-lg w-full focus:outline-none"
+              className="border-red-600 border p-3 rounded-lg h-[50] w-full focus:outline-none"
             />
 
             <button
