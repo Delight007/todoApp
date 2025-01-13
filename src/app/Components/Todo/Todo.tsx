@@ -56,7 +56,7 @@ export default function Todo() {
       const newTodo = {
         title: todo,
         done: false,
-        createdAt: new Date(date),
+        createdAt: new Date(date || new Date()),
       };
       const docRef = await addDoc(collection(db, "Todos"), newTodo);
 
@@ -153,7 +153,7 @@ export default function Todo() {
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
-              <option value="Default">Default</option>
+              <option value="Default">All</option>
               <option value="Done">Done</option>
               <option value="Undone">Undone</option>
             </select>
