@@ -30,6 +30,7 @@ export default function Todo() {
         return {
           id: doc.id,
           ...data,
+          // createdAt: new Date(data.createdAt),
         };
       });
       console.log(todoList);
