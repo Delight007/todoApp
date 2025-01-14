@@ -1,11 +1,11 @@
 import { MdDelete } from "react-icons/md";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
-import Todo, { Todos } from "../Todo/Todo";
-import { useGlobalContext } from "../context/GlobalContext";
+import Todo, { Todos } from "../Todo/page";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "../Components/firebase/firebase";
 import { useState } from "react";
+import { useGlobalContext } from "../context/GlobalContext";
 interface TodoListProps {
   todo: Todos;
 }
@@ -90,15 +90,15 @@ const TodoList: React.FC<TodoListProps> = ({ todo }) => {
         </span>
 
         <span className="float-right font-semibold text-xl">
-          <button className=" text-red-600" onClick={() => setIsEditing(true)}>
+          <button className=" text-blue-400" onClick={() => setIsEditing(true)}>
             <FaEdit />
           </button>
           <button className="mx-4" onClick={() => handleDone(todo)}>
             <IoCheckmarkDoneCircle
-              className={`${todo.done ? "text-green-500" : "text-red-600"}`}
+              className={`${todo.done ? "text-green-500" : "text-blue-400"}`}
             />
           </button>
-          <button className=" text-red-600" onClick={() => handleDelete(todo)}>
+          <button className=" text-blue-400" onClick={() => handleDelete(todo)}>
             <MdDelete />
           </button>
         </span>

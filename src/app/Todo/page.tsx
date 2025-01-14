@@ -1,9 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { addDoc, collection, onSnapshot, Timestamp } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  query,
+  Timestamp,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "../Components/firebase/firebase";
 import TodoList from "../TodoList/TodoList";
-// import GlobalProvider from "../context/GlobalContext";
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export interface Todos {
   id: string;
@@ -20,11 +29,21 @@ export default function Todo() {
   const [filter, setFilter] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [active, setActive] = useState<string>("Present");
+  const router = useRouter();
 
   // Realtime Updates
+
   useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      router.push("/Login");
+      return;
+    }
+
     const todoCollection = collection(db, "Todos");
-    const unsubscribe = onSnapshot(todoCollection, (snapshot) => {
+    const q = query(todoCollection, where("userId", "==", user?.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const todoList: Todos[] = snapshot.docs.map((doc) => {
         const data = doc.data() as Omit<Todos, "id">;
         return {
@@ -44,7 +63,11 @@ export default function Todo() {
   }, []);
 
   // Handle Submit
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
     e.preventDefault();
     if (!todo.trim() || (date && isNaN(new Date(date).getTime()))) {
       console.log("Enter a valid todo");
@@ -57,6 +80,7 @@ export default function Todo() {
         title: todo,
         done: false,
         createdAt: new Date(date || new Date()),
+        userId: user?.uid,
       };
       const docRef = await addDoc(collection(db, "Todos"), newTodo);
 
@@ -92,10 +116,18 @@ export default function Todo() {
       return matchesFilter && matchesSearch && matchesDate;
     });
 
+  async function handleLogout() {
+    try {
+      await signOut(auth);
+      router.push("Login");
+    } catch (err) {
+      console.log("error", err);
+    }
+  }
   return (
     <div className="h-screen mx-w[1300px]">
       <div className=" w-[700px] mx-auto flex items-center flex-col">
-        <h1 className="mt-5 font-semibold text-red-600 underline text-2xl text-left">
+        <h1 className="mt-5 font-semibold text-blue-400 underline text-2xl text-left">
           To-Do List
         </h1>
         <form
@@ -108,7 +140,7 @@ export default function Todo() {
             </label>
 
             <input
-              className="border-red-600 border p-3 mb-4 rounded-lg w-full focus:outline-none"
+              className="border-blue-600 border p-3 mb-4 rounded-lg w-full focus:outline-none"
               type="text"
               value={todo}
               placeholder="Enter List"
@@ -122,11 +154,11 @@ export default function Todo() {
               value={date}
               placeholder="Enter Date"
               onChange={(e) => setDate(e.target.value)}
-              className="border-red-600 border p-3 rounded-lg h-[50] w-full focus:outline-none"
+              className="border-blue-600 border p-3 rounded-lg h-[50] w-full focus:outline-none"
             />
 
             <button
-              className=" w-[400px] border-none rounded-lg  box-border mt-4 p-3 bg-red-600 text-white text-sm font-medium"
+              className=" w-[400px] border-none rounded-lg  box-border mt-4 p-3 bg-blue-400 text-white text-sm font-medium"
               disabled={isAdding}
             >
               {isAdding ? "Adding" : "Add"}
@@ -164,8 +196,8 @@ export default function Todo() {
           <button
             className={`border p-2  w-[100px] rounded-lg ${
               active === "Past"
-                ? "bg-white text-red-600"
-                : " bg-red-600 text-white "
+                ? "bg-white text-blue-600"
+                : " bg-blue-400 text-white "
             }`}
             onClick={() => setActive("Past")}
           >
@@ -174,8 +206,8 @@ export default function Todo() {
           <button
             className={`border p-2  w-[100px] rounded-lg ${
               active === "Present"
-                ? "bg-white text-red-600"
-                : " bg-red-600 text-white "
+                ? "bg-white text-blue-600"
+                : " bg-blue-400 text-white "
             }`}
             onClick={() => setActive("Present")}
           >
@@ -184,8 +216,8 @@ export default function Todo() {
           <button
             className={`border p-2  w-[100px] rounded-lg ${
               active === "Future"
-                ? "bg-white text-red-600"
-                : " bg-red-600 text-white "
+                ? "bg-white text-blue-600"
+                : " bg-blue-400 text-white "
             }`}
             onClick={() => setActive("Future")}
           >
@@ -198,6 +230,9 @@ export default function Todo() {
             <TodoList key={todo.id} todo={todo} />
           ))}
         </div>
+        <button className="font-medium underline mt-5" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );

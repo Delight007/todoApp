@@ -6,7 +6,7 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { Todos } from "../Todo/Todo";
+import { Todos } from "../Todo/page";
 
 interface GlobalContextType {
   todos: Todos[];

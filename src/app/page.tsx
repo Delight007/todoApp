@@ -1,12 +1,12 @@
-import GlobalProvider from "./Components/context/GlobalContext";
-import Todo from "./Components/Todo/Todo";
+import GlobalProvider from "./context/GlobalContext";
+import Login from "./Login/page";
+// import Login from "./Login/page";
+// import Todo from "./Todo/page";
 
 export default function Home() {
   return (
     <div>
-      <GlobalProvider>
-        <Todo />
-      </GlobalProvider>
+      <Login />
     </div>
   );
 }
