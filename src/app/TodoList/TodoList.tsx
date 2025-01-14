@@ -29,7 +29,7 @@ const TodoList: React.FC<TodoListProps> = ({ todo }) => {
   async function handleDone(todoDone: Todos) {
     console.log("todo done Already");
     try {
-      await updateDoc(doc(db, "Todos", todoDone.id), { done: !todoDone.done });
+      await updateDoc(doc(db, "Todos", todoDone.id), { done: true });
 
       setTodos((prevTodos: Todos[]) =>
         prevTodos.map((prev) =>
@@ -93,7 +93,11 @@ const TodoList: React.FC<TodoListProps> = ({ todo }) => {
           <button className=" text-blue-400" onClick={() => setIsEditing(true)}>
             <FaEdit />
           </button>
-          <button className="mx-4" onClick={() => handleDone(todo)}>
+          <button
+            className="mx-4"
+            onClick={() => handleDone(todo)}
+            disabled={todo.done}
+          >
             <IoCheckmarkDoneCircle
               className={`${todo.done ? "text-green-500" : "text-blue-400"}`}
             />
