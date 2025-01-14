@@ -29,13 +29,10 @@ export default function Login() {
   }
   async function signInwithGoogle() {
     try {
-      setIsAdding(true);
       await signInWithPopup(auth, googleProvider);
       router.push("/Todo");
-      setIsAdding(false);
     } catch (err) {
       console.log("error", err);
-      setIsAdding(false);
     }
   }
   return (
@@ -72,14 +69,13 @@ export default function Login() {
           </button>
 
           <button
-            disabled={isAdding}
             className="w-[250px] h-[50px] bg-blue-400 text-white font-medium mt-6 rounded-lg focus:outline-none"
             onClick={(e) => {
               e.preventDefault();
               signInwithGoogle();
             }}
           >
-            {isAdding ? "Signing in ...." : " SignIn With Google"}
+            SignIn With Google
           </button>
         </form>
       </div>
