@@ -103,11 +103,12 @@ export default function Todo() {
         .toLowerCase()
         .includes(search.toLowerCase());
       const now = new Date();
-
+      now.setHours(0, 0, 0, 0);
       const todoDate = new Date(t.createdAt);
+      todoDate.setHours(0, 0, 0, 0);
       const matchesDate =
         active === "Past"
-          ? now > todoDate
+          ? todoDate < now
           : active === "Present"
           ? todoDate.toDateString() === now.toDateString()
           : active === "Future"
@@ -127,6 +128,9 @@ export default function Todo() {
   return (
     <div className="h-screen mx-w[1300px]">
       <div className=" w-[700px] mx-auto flex items-center flex-col">
+        <button className="font-medium underline mt-5" onClick={handleLogout}>
+          Logout
+        </button>
         <h1 className="mt-5 font-semibold text-blue-400 underline text-2xl text-left">
           To-Do List
         </h1>
@@ -230,9 +234,6 @@ export default function Todo() {
             <TodoList key={todo.id} todo={todo} />
           ))}
         </div>
-        <button className="font-medium underline mt-5" onClick={handleLogout}>
-          Logout
-        </button>
       </div>
     </div>
   );
