@@ -3,6 +3,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../Components/firebase/firebase";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export interface User {
   id: string;
@@ -15,6 +17,8 @@ export default function Regiter() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isPending, setIsPending] = useState<boolean>(false);
+
+  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,6 +39,7 @@ export default function Regiter() {
       setEmail("");
       setPassword("");
       setIsPending(false);
+      router.push("/Login");
     } catch (err) {
       console.log("error", err);
       setIsPending(false);
@@ -81,6 +86,12 @@ export default function Regiter() {
             {isPending ? "Registering ...." : "Register"}
           </button>
         </form>
+        <p className="mt-4">
+          Don't have an account?{" "}
+          <Link href="/Login" className="text-blue-400 font-semibold">
+            Sign In
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, googleProvider } from "../Components/firebase/firebase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export interface login {
   email: string;
@@ -78,6 +79,12 @@ export default function Login() {
             SignIn With Google
           </button>
         </form>
+        <p className="mt-4">
+          Don't have an account?{" "}
+          <Link href="/Register" className="text-blue-400 font-semibold">
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   );
